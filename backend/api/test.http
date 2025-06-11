@@ -1,0 +1,32 @@
+### Get all lobbies
+GET http://localhost:3001/api/lobbies
+Accept: application/json
+
+### Create a new lobby
+POST http://localhost:3001/api/lobbies
+Content-Type: application/json
+
+{
+    "name": "Game Night",
+    "game": 1,
+    "region": 1,
+    "maxPlayers": 4,
+    "status": 0
+}
+
+### Join a lobby
+POST http://localhost:3001/api/lobby/bdad9df2-e503-4ac9-bb10-59fdf1628af3/join
+Content-Type: application/json
+
+### Leave a lobby
+POST http://localhost:3001/api/lobby/bdad9df2-e503-4ac9-bb10-59fdf1628af3/leave
+Content-Type: application/json
+
+### Get a Lobby details by the ID
+GET http://localhost:3001/api/lobby/bdad9df2-e503-4ac9-bb10-59fdf1628af3
+Accept: application/json
+
+### Delete a lobby
+POST http://localhost:3001/api/lobby/bdad9df2-e503-4ac9-bb10-59fdf1628af3/delete
+Content-Type: application/json
+
