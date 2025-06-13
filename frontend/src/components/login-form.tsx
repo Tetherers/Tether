@@ -52,6 +52,26 @@ export function LoginForm() {
             email: loginData.email,
             password: loginData.password,
         });
+        // const access_token = auth_response.data.session?.access_token;
+        // if (access_token) {
+        //     try {
+        //         // Example GET request to your backend
+        //         const response = await fetch('http://localhost:3001/api/lobbies', {
+        //             method: 'GET',
+        //             headers: {
+        //                 'Authorization': `Bearer ${access_token}`,
+        //             },
+        //         });
+        //         if (!response.ok) {
+        //             throw new Error('Backend request failed');
+        //         }
+        //         const data = await response.json();
+        //         console.log('Backend response:', data);
+        //         // Optionally handle response data here
+        //     } catch (error) {
+        //         toast.error('Failed to contact backend');
+        //     }
+        // }
         router.push('/lobby');
         setIsLoading(false);
     }
