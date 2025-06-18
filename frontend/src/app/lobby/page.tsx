@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/header";
 import { LobbyList } from "@/components/lobby-list";
 
+
 export default function LobbyPage() {
     return (
         <main className="min-h-screen bg-gray-900">
@@ -14,7 +15,6 @@ export default function LobbyPage() {
                 </p>
             </div>
             <LobbyList/>
-
         </main>
     )
 }

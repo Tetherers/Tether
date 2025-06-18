@@ -1,7 +1,7 @@
 export async function getLobbyDB(lobbyId, client) {
     const {data, error} = await client
         .from('lobby')
-        .select('id, name, game, region, current_players, max_players, status, created_at')
+        .select('id, name, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at')
         .eq('id', lobbyId)
     if (error) {
         console.error("Error fetching open lobbies:", error);
@@ -13,7 +13,7 @@ export async function getLobbyDB(lobbyId, client) {
 export async function getOpenLobbies(client) {
     const {data, error} = await client
         .from('lobby')
-        .select('id, name, game, region, current_players, max_players, status, created_at')
+        .select('id, name, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at')
         .eq('status', 0) // Assuming 0 means open
         .order('created_at', { ascending: false });
     if (error) {
@@ -27,7 +27,7 @@ export async function getOpenLobbies(client) {
 export async function getGameFilteredLobbies(game, client) {
     const {data, error} = await client
         .from('lobby')
-        .select('id, name, game, region, current_players, max_players, status, created_at')
+        .select('id, name, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at')
         .eq('game', game)
         .order('created_at', { ascending: false });
     if (error) {
@@ -41,7 +41,7 @@ export async function getGameFilteredLobbies(game, client) {
 export async function getGameRegionFilteredLobbies(game, region, client) {
     const {data, error} = await client
         .from('lobby')
-        .select('id, name, game, region, current_players, max_players, status, created_at')
+        .select('id, name, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at')
         .eq('game', game)
         .eq('region', region)
         .order('created_at', { ascending: false });
@@ -122,5 +122,29 @@ export async function leaveLobbyDB(lobbyId, client) {
         console.error('Error:', error.message);
     } else {
         console.log('Success: Left Lobby', lobbyId);
+    }
+}
+
+export async function getGamesDB(client) {
+    const {data, error} = await client
+        .from('game')
+        .select('id, name')
+    if (error) {
+        console.error("Error fetching games:", error);
+        return [];
+    } else {
+        return data;
+    }
+}
+
+export async function getRegionsDB(client) {
+    const {data, error} = await client
+        .from('region')
+        .select('id, name')
+    if (error) {
+        console.error("Error fetching regions:", error);
+        return [];
+    } else {
+        return data;
     }
 }

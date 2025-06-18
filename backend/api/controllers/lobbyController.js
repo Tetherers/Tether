@@ -26,9 +26,10 @@ export async function getLobbies(req, res) {
     if (game) {
         filteredLobbies = await getGameFilteredLobbies(game, supabase);
     }
-    if (region && game) {
+    else if (region && game) {
         filteredLobbies = await getGameRegionFilteredLobbies(game, region, supabase);
     }
+    console.log("Filtered lobbies:", filteredLobbies);
     res.json(filteredLobbies);
 }
 
@@ -47,6 +48,7 @@ export async function addLobby(req, res) {
     }
     try {
         const newLobby = await addLobbyDB(name, game, region, maxPlayers, status, supabase);
+        console.log("New lobby created:", newLobby);
         res.status(201).json({ message: "Lobby created successfully", lobby: newLobby });
     } catch (error) {
         return res.status(500).json({ error: "Failed to create lobby", details: error.message });
