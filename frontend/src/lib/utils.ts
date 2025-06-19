@@ -16,6 +16,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export interface User {
+  id: string;
+  username: string;
+}
+
 export interface Lobby {
   id:string;
   game: {
@@ -25,6 +30,7 @@ export interface Lobby {
   players: {
     current: number;
     max: number;
+    list: User[];
   }
   status: number;
   created_at: string;

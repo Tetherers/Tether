@@ -1,6 +1,9 @@
 import { leaveLobbyDB, joinLobbyDB, getLobbyDB, getOpenLobbies, getGameFilteredLobbies, getGameRegionFilteredLobbies, addLobbyDB, deleteLobbyDB } from "./dbController.js";
 import { createSupabaseClient, parseAccessToken } from "../utils.js";
 
+/**
+ * This call will obtain the lobby users as well as the lobby data.
+ */
 export async function getLobby(req, res) {
     const supabase = createSupabaseClient(parseAccessToken(req));
     const { id } = req.params;
@@ -12,6 +15,20 @@ export async function getLobby(req, res) {
         res.json(lobby);
     } catch (error) {
         return res.status(500).json({ error: "Failed to fetch lobby", details: error.message });
+    }
+}
+
+export async function getLobbyUsers(req, res) {
+    const supabase = createSupabaseClient(parseAccessToken(req));
+    const { id } = req.params;
+    try {
+        const lobbyData = await getLobbyUserDB(id, supabase);
+        if (!lobbyData) {
+            return res.status(404).json({ error: "Lobby not found" });
+        }
+        res.json(lobbyData);
+    } catch (error) {
+        return res.status(500).json({ error: "Failed to fetch lobby users", details: error.message });
     }
 }
 /**

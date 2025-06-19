@@ -1,8 +1,9 @@
 export async function getLobbyDB(lobbyId, client) {
     const {data, error} = await client
         .from('lobby')
-        .select('id, name, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at')
+        .select('id, name, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at, lobby_users ( users (id, username))')
         .eq('id', lobbyId)
+        .single();
     if (error) {
         console.error("Error fetching open lobbies:", error);
         return [];
@@ -10,6 +11,7 @@ export async function getLobbyDB(lobbyId, client) {
         return data;
     }
 }
+
 export async function getOpenLobbies(client) {
     const {data, error} = await client
         .from('lobby')
