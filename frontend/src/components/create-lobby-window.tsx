@@ -73,10 +73,11 @@ export function CreateLobbyWindow() {
                         maxPlayers: Number(formData.maxPlayers),
                         status: 0,
                     }),
-                });
-                if (!response.ok) {
-                    throw new Error('Backend request failed');
-                }
+                })
+                const data = await response.json();
+                const lobbyId = data.lobby[0].id;
+                router.push(`/room/${lobbyId}`);
+                setIsLoading(false)
             } catch (error) {
                 toast.error('Failed to contact backend');
                 return;
@@ -88,8 +89,6 @@ export function CreateLobbyWindow() {
             toast("Lobby created",{
                 description: "Your lobby has been created successfully.",
             })
-            router.push(`/lobby`)
-            setIsLoading(false)
         }
 
     useEffect(() => {

@@ -20,7 +20,6 @@ const getStatus = (lobby: Lobby) => {
     const status = lobby.status;
     const currentPlayers = lobby.players.current;
     const maxPlayers = lobby.players.max;
-    let finalStatus = "open";
     if (status === 0 && currentPlayers < maxPlayers) {
         return "open";
     } else {
@@ -44,53 +43,57 @@ export function LobbyList() {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(true)
     const [lobbies, setLobbies] = useState([] as Lobby[])
-    useEffect(() => {
-        const fetchLobbies = async () => {
-            setIsLoading(true)
-            const { data } = await supabase.auth.getSession();
-            const access_token = data.session?.access_token;
-            if (access_token) {
-                try {
-                    // Example GET request to your backend
-                    const response = await fetch('http://localhost:3001/api/lobbies', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${access_token}`,
-                        },
-                    });
-                    if (!response.ok) {
-                        throw new Error('Backend request failed');
-                    }
-                    const data = await response.json();
-                    setLobbies((data as any[]).map(item => ({
-                        id: item.id,
-                        game: {
-                            id: item.game.id,
-                            name: item.game.name,
-                        },
-                        players: {
-                            current: item.current_players,
-                            max: item.max_players,
-                        },
-                        status: item.status,
-                        created_at: item.created_at,
-                        name: item.name,
-                        region: {
-                            id: item.region.id,
-                            name: item.region.name,
-                        }
-                        } as Lobby
-                    ))
-                        || []);
-                    setIsLoading(false);
-                    // Optionally handle response data here
-                } catch (error) {
-                    toast.error('Failed to contact backend');
+    const fetchLobbies = async () => {
+        setIsLoading(true)
+        const { data } = await supabase.auth.getSession();
+        const access_token = data.session?.access_token;
+        if (access_token) {
+            try {
+                // Example GET request to your backend
+                const response = await fetch('http://localhost:3001/api/lobbies', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`,
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error('Backend request failed');
                 }
+                const data = await response.json();
+                setLobbies((data as any[]).map(item => ({
+                    id: item.id,
+                    game: {
+                        id: item.game.id,
+                        name: item.game.name,
+                    },
+                    players: {
+                        current: item.current_players,
+                        max: item.max_players,
+                    },
+                    status: item.status,
+                    created_at: item.created_at,
+                    name: item.name,
+                    region: {
+                        id: item.region.id,
+                        name: item.region.name,
+                    }
+                    } as Lobby
+                ))
+                    || []);
+                setIsLoading(false);
+                // Optionally handle response data here
+            } catch (error) {
+                toast.error('Failed to contact backend');
             }
-        }  
+        }
+    }  
+    useEffect(() => {
         fetchLobbies()
     }, []);
+
+    const visitLobby = (lobbyId: string) => {
+        router.push(`/room/${lobbyId}`);
+    }
     return (
         <div className="w-full">
             <Tabs defaultValue="all-lobbies" className="p-4" >
@@ -99,7 +102,10 @@ export function LobbyList() {
                         <TabsTrigger value="all-lobbies" className="text-l "> All Lobbies </TabsTrigger>
                         <TabsTrigger value="my-lobbies" className="text-l "> My Lobbies </TabsTrigger>
                     </TabsList>
-                    <CreateLobbyWindow />
+                    <div className="flex gap-2">
+                        <Button className="bg-brand-secondary text-white" onClick={() => fetchLobbies()}> Refresh Lobbies </Button>
+                        <CreateLobbyWindow />
+                    </div>
                 </div>
                 <TabsContent value="all-lobbies" className="pt-4">
                     { isLoading ? (
@@ -142,7 +148,7 @@ export function LobbyList() {
                                                 {formatDistanceToNow(new Date(lobby.created_at))} ago
                                             </CardDescription>
                                         </div>
-                                        <Button className=" text-white hover:bg-brand-secondary/80 bg-brand-secondary"> Join This Lobby </Button>
+                                        <Button className=" text-white hover:bg-brand-secondary/80 bg-brand-secondary" onClick={()=>visitLobby(lobby.id)}> View This Lobby </Button>
                                     </div>
                                 </Card>
                             ))
