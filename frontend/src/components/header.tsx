@@ -14,11 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from './ui/button';
 
+import { supabase } from '@/lib/utils';
+
 export function PageHeader() {
     const router = useRouter();
 
-    const handleLogout = () => {
-        router.push('/');
+    const handleLogout = async () => {
+        const {error} = await supabase.auth.signOut();
+        if (error) {
+            // handle error
+            console.error('Logout error:', error.message)
+        } else {router.push('/');}
     }
 
     return (

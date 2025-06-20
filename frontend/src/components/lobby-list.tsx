@@ -103,7 +103,7 @@ export function LobbyList() {
                         <TabsTrigger value="my-lobbies" className="text-l "> My Lobbies </TabsTrigger>
                     </TabsList>
                     <div className="flex gap-2">
-                        <Button className="bg-brand-secondary text-white" onClick={() => fetchLobbies()}> Refresh Lobbies </Button>
+                        <Button className="bg-brand-secondary text-white hover:bg-brand-secondary/80" onClick={() => fetchLobbies()}> Refresh Lobbies </Button>
                         <CreateLobbyWindow />
                     </div>
                 </div>

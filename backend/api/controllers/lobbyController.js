@@ -12,6 +12,10 @@ export async function getLobby(req, res) {
         if (!lobby) {
             return res.status(404).json({ error: "Lobby not found" });
         }
+        lobby.lobby_users = lobby.lobby_users.map(user => ({
+            id: user.users.id,
+            username: user.users.username
+        }));
         res.json(lobby);
     } catch (error) {
         return res.status(500).json({ error: "Failed to fetch lobby", details: error.message });

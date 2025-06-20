@@ -151,7 +151,7 @@ export function CreateLobbyWindow() {
     return (
         <Dialog>
             <DialogTrigger >
-                <Button className="bg-brand-secondary text-white"> Create Lobby </Button>
+                <Button className="bg-brand-secondary hover:bg-brand-secondary/80 text-white"> Create Lobby </Button>
             </DialogTrigger>
             <DialogContent>
                 <form onSubmit={handleSubmit}>

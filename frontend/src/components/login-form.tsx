@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner";
 
 import { supabase } from "@/lib/utils";
+import { set } from 'date-fns';
 
 export function LoginForm() {
     const router = useRouter();
@@ -30,6 +31,8 @@ export function LoginForm() {
         password: "",
         confirmPassword: "",
     });
+
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLoginData({
@@ -52,31 +55,45 @@ export function LoginForm() {
             email: loginData.email,
             password: loginData.password,
         });
-        // const access_token = auth_response.data.session?.access_token;
-        // if (access_token) {
-        //     try {
-        //         // Example GET request to your backend
-        //         const response = await fetch('http://localhost:3001/api/lobbies', {
-        //             method: 'GET',
-        //             headers: {
-        //                 'Authorization': `Bearer ${access_token}`,
-        //             },
-        //         });
-        //         if (!response.ok) {
-        //             throw new Error('Backend request failed');
-        //         }
-        //         const data = await response.json();
-        //         console.log('Backend response:', data);
-        //         // Optionally handle response data here
-        //     } catch (error) {
-        //         toast.error('Failed to contact backend');
-        //     }
-        // }
-        router.push('/lobby');
-        setIsLoading(false);
+        if (auth_response.error) {
+            setErrorMessage(auth_response.error.message);
+            loginData.password = "";
+            setIsLoading(false);
+        } else {
+            toast("Welcome Back to Tether", {
+                description:"Get Ready to Squad up and Load up",
+                duration: 5000
+            })
+            router.push('/lobby');
+            setIsLoading(false);
+        }       
     }
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsLoading(true);
+        const {data, error} = await supabase.auth.signUp({
+            email: registerData.email,
+            password: registerData.password,
+            options: {
+                data: {
+                    username: registerData.username,
+                }
+            }
+        })
+        if (error) {
+            setErrorMessage(error.message);
+            registerData.password = "";
+            registerData.confirmPassword = "";
+            setIsLoading(false);
+        } else {
+            toast("Account has been created", {
+                description:"Please check your email for confirmation and log in.",
+                duration: 5000
+            })
+            router.push('/');
+            setIsLoading(false);
+        }       
     }
 
 
@@ -87,7 +104,7 @@ export function LoginForm() {
                 <img src="/TetherLogo.png" alt="Tether Logo" className="w-12 h-12" />
                 <CardTitle className="text-4xl text-brand-secondary">Tether</CardTitle>
             </div>
-            <CardDescription>Connect with gamers and find your perfect squad</CardDescription>
+            <CardDescription>Squad up and Load up</CardDescription>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="login">
@@ -135,6 +152,7 @@ export function LoginForm() {
                         className="bg-brand-secondary border-brand-tertiary text-white placeholder:text-gray-400 focus:border-brand-tertiary"
                         />
                     </div>
+                    <div className='flex justify-center'><p className="text-red-500 text-sm">{errorMessage}</p></div>
                     <Button
                         type="submit"
                         className="w-full bg-brand-secondary transition-all duration-300 text-white"
@@ -203,6 +221,7 @@ export function LoginForm() {
                         className="bg-brand-secondary border-brand-tertiary text-white placeholder:text-gray-400 focus:border-brand-tertiary"
                         />
                     </div>
+                    <div className='flex justify-center'><p className="text-red-500 text-sm">{errorMessage}</p></div>
                     <Button
                         type="submit"
                         className="w-full bg-brand-secondary transition-all duration-300 text-white hover:bg-brand-tertiary"

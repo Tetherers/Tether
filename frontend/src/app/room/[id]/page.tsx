@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { supabase } from "@/lib/utils";
 import type { Lobby } from "@/lib/utils";
+import type { User } from "@/lib/utils";
 
 export default function RoomPage({ params }: { params: { id: string } }) {
     const [isLoading, setIsLoading] = useState(true)
@@ -27,6 +28,7 @@ export default function RoomPage({ params }: { params: { id: string } }) {
                         throw new Error('Failed to fetch room data');
                     }
                     const data = await response.json();
+                    console.log('Fetched room data:', data);
                     setLobby({
                         id: data.id,
                         game: {
