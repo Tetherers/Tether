@@ -93,6 +93,7 @@ export async function joinLobby(req, res) {
     const { id } = req.params;
     try {
         await joinLobbyDB(id, supabase);
+        return res.status(200).json({ message: "Successfully joined lobby" });
     }
     catch (error) {
         return res.status(500).json({ error: "Failed to join lobby", details: error.message });

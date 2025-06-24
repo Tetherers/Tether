@@ -1,7 +1,7 @@
 export async function getLobbyDB(lobbyId, client) {
     const {data, error} = await client
         .from('lobby')
-        .select('id, name, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at, lobby_users ( users (id, username))')
+        .select('id, name, owner, game: game (id, name), region: region (id, name), current_players, max_players, status, created_at, lobby_users ( users (id, username))')
         .eq('id', lobbyId)
         .single();
     if (error) {
@@ -77,9 +77,8 @@ export async function deleteLobbyDB(lobbyId, client) {
         .delete()
         .eq('id', lobbyId)
         .select('*');
-    if (error) {
-        console.error("Error deleting lobby:", error);
-        throw error;
+    if (error || data.length === 0) {
+        throw new Error(error ? error.message : "You are not the owner of this lobby or it does not exist.");
     } else {
         return data;
     }
@@ -100,7 +99,7 @@ export async function joinLobbyDB(lobbyId, client) {
     });
 
     if (error) {
-    console.error('Error:', error.message);
+        throw new Error (error.message);
     } else {
     console.log('Success: Joined Lobby', lobbyId);
     }

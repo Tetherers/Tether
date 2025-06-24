@@ -39,6 +39,7 @@ export interface Lobby {
     id: number;
     name: string;
   }
+  ownerID: string;
 }
 
 export interface Game {
