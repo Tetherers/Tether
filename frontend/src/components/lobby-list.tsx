@@ -83,7 +83,7 @@ export function LobbyList() {
                 setIsLoading(false);
                 // Optionally handle response data here
             } catch (error) {
-                toast("Error fetching lobbies: " {
+                toast("Error fetching lobbies: ", {
                     description: error instanceof Error ? error.message : "Unknown error",
                     duration: 5000,
                 }
