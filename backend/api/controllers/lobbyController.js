@@ -105,6 +105,7 @@ export async function leaveLobby(req, res) {
     const { id } = req.params;
     try {
         await leaveLobbyDB(id, supabase);
+        return res.status(200).json({ message: "Successfully left lobby" });
     }
     catch (error) {
         return res.status(500).json({ error: "Failed to leave lobby", details: error.message });
