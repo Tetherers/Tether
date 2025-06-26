@@ -79,11 +79,17 @@ export function CreateLobbyWindow() {
                 router.push(`/room/${lobbyId}`);
                 setIsLoading(false)
             } catch (error) {
-                toast.error('Failed to contact backend');
+                toast("Failed to create lobby", {
+                    description: error instanceof Error ? error.message : "Unknown error",
+                    duration: 5000,
+                })
                 return;
             }
         } else {
-            toast.error('No session found. Please log in.');
+            toast("No Session found", {
+                description: "Please log in to create a lobby.",
+                duration: 5000,
+            })
             return;
         }
             toast("Lobby created",{
@@ -114,7 +120,11 @@ export function CreateLobbyWindow() {
                     ))
                         || []);
                 } catch (error) {
-                    toast.error('Failed to contact backend');
+                    toast("Failed to contact backend", {
+                        description: error instanceof Error ? error.message : "Unknown error",
+                        duration: 5000,
+                    }
+                    )
                 }
             }
         }
@@ -140,7 +150,11 @@ export function CreateLobbyWindow() {
                     ))
                         || []);
                 } catch (error) {
-                    toast.error('Failed to contact backend');
+                    toast("Failed to contact backend", {
+                        description: error instanceof Error ? error.message : "Unknown error",
+                        duration: 5000,
+                    }
+                    )
                 }
             }
         }
