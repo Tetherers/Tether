@@ -126,10 +126,35 @@ export default function RoomPage({ params }: { params: { id: string } }) {
                 if (!response.ok) {
                     throw new Error(data.details || 'Failed to delete lobby');
                 }
-                console.log('Lobby deleted successfully');
                 router.push('/lobby'); // Redirect to lobby list after deletion
             } catch (error) {
                 toast('Failed to delete lobby', {
+                    description:  error instanceof Error ? error.message : 'An unexpected error occurred',
+                    duration: 5000,
+                }
+                )
+            }
+        }
+    }
+
+    async function handleLeaveLobby() {
+        const { data } = await supabase.auth.getSession();
+        const access_token = data.session?.access_token;
+        if (access_token) {
+            try {
+                const response = await fetch(`http://localhost:3001/api/lobby/${params.id}/leave`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                });
+                console.log('Lobby left successfully');                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.details || 'Failed to leave lobby');
+                }
+                router.push('/lobby');
+            } catch (error) {
+                toast('Failed to leave lobby', {
                     description:  error instanceof Error ? error.message : 'An unexpected error occurred',
                     duration: 5000,
                 }
@@ -143,7 +168,7 @@ export default function RoomPage({ params }: { params: { id: string } }) {
             <p>{params.id}</p>
             {isUserInLobby !== null && (
             isUserInLobby
-                ? <p>You are in this lobby.</p>
+                ? <Button className="bg-brand-secondary text-white" onClick={() => handleLeaveLobby()}> Leave Lobby </Button>
                 : <Button className="bg-brand-secondary text-white" onClick={() => handleJoinLobby()}> Join Lobby </Button>
             )}
             {isUserOwner !== null && (
